@@ -85,6 +85,3 @@ npx prisma generate
 
 
 - If you see Prisma errors about a missing client, run `npx prisma generate` inside `apps/backend`.
-
-## Note
-- DB Scchema and API Documentation in docs file.
