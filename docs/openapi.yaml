@@ -1,0 +1,245 @@
+openapi: 3.0.3
+info:
+  title: mini-erp API
+  version: "1.0.0"
+  description: API spec for mini-erp (Next frontend + Nest backend + Prisma)
+servers:
+  - url: http://localhost:3001
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    RegisterDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+    CreateCustomerDto:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    InvoiceItemDto:
+      type: object
+      properties:
+        description:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: number
+    CreateInvoiceDto:
+      type: object
+      properties:
+        customerId:
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemDto'
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+        invoiceNo:
+          type: string
+        status:
+          type: string
+        issueDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        customerId:
+          type: string
+        subTotal:
+          type: number
+        taxTotal:
+          type: number
+        grandTotal:
+          type: number
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemDto'
+    UpdateStatusDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [DRAFT, SENT, PAID, OVERDUE, CANCELLED]
+
+paths:
+  /api/v1/auth/register:
+    post:
+      tags: [Auth Subsystem]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '201':
+          description: User created
+  /api/v1/auth/login:
+    post:
+      tags: [Auth Subsystem]
+      summary: Login and receive JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: Authenticated
+  /api/v1/customers:
+    get:
+      tags: [Customers CRM Module]
+      summary: List customers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List returned
+    post:
+      tags: [Customers CRM Module]
+      summary: Create customer
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerDto'
+      responses:
+        '201':
+          description: Customer created
+  /api/v1/customers/{id}:
+    delete:
+      tags: [Customers CRM Module]
+      summary: Delete customer
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+  /api/v1/invoices:
+    get:
+      tags: [Invoice Ledger Module]
+      summary: List invoices
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Invoices returned
+    post:
+      tags: [Invoice Ledger Module]
+      summary: Create invoice
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceDto'
+      responses:
+        '201':
+          description: Invoice created
+  /api/v1/invoices/{id}/status:
+    patch:
+      tags: [Invoice Ledger Module]
+      summary: Update invoice status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusDto'
+      responses:
+        '200':
+          description: Status updated
+  /api/v1/dashboard/summary:
+    get:
+      tags: [Dashboard Aggregates Module]
+      summary: Get dashboard summary
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Summary returned

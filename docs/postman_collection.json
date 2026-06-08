@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "mini-erp API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@erp.local\",\n  \"password\": \"Password123!\",\n  \"name\": \"Admin\"\n}"
+        },
+        "url": { "raw": "http://localhost:3001/api/v1/auth/register", "host": ["http://localhost:3001"], "path": ["api","v1","auth","register"] }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@erp.local\",\n  \"password\": \"Password123!\"\n}" },
+        "url": { "raw": "http://localhost:3001/api/v1/auth/login", "host": ["http://localhost:3001"], "path": ["api","v1","auth","login"] }
+      }
+    },
+    {
+      "name": "Customers - List",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{jwt}}" } ],
+        "url": { "raw": "http://localhost:3001/api/v1/customers", "host": ["http://localhost:3001"], "path": ["api","v1","customers"] }
+      }
+    },
+    {
+      "name": "Customers - Create",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{jwt}}" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Acme Corp\",\n  \"email\": \"billing@acme.local\"\n}" },
+        "url": { "raw": "http://localhost:3001/api/v1/customers", "host": ["http://localhost:3001"], "path": ["api","v1","customers"] }
+      }
+    },
+    {
+      "name": "Invoices - List",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{jwt}}" } ],
+        "url": { "raw": "http://localhost:3001/api/v1/invoices", "host": ["http://localhost:3001"], "path": ["api","v1","invoices"] }
+      }
+    },
+    {
+      "name": "Invoices - Create",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{jwt}}" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"customerId\": \"<customer-uuid>\",\n  \"items\": [ { \"description\": \"Service\", \"quantity\": 1, \"price\": 100 } ]\n}" },
+        "url": { "raw": "http://localhost:3001/api/v1/invoices", "host": ["http://localhost:3001"], "path": ["api","v1","invoices"] }
+      }
+    },
+    {
+      "name": "Invoices - Update Status",
+      "request": {
+        "method": "PATCH",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{jwt}}" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"PAID\"\n}" },
+        "url": { "raw": "http://localhost:3001/api/v1/invoices/{{invoiceId}}/status", "host": ["http://localhost:3001"], "path": ["api","v1","invoices","{{invoiceId}}","status"] }
+      }
+    },
+    {
+      "name": "Dashboard - Summary",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{jwt}}" } ],
+        "url": { "raw": "http://localhost:3001/api/v1/dashboard/summary", "host": ["http://localhost:3001"], "path": ["api","v1","dashboard","summary"] }
+      }
+    }
+  ]
+}
